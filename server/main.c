@@ -102,17 +102,16 @@ static int ahc_op(void * cls,
 
   struct Request *request;
   struct MHD_Response * response;
-  
+  int code;
+  int ret; 
   request = *ptr;
 
-  int ret;
 
   if (0 != strcmp(method, MHD_HTTP_METHOD_POST))
     return MHD_NO; /* unexpected method */
   
   if (NULL == request)
     {
-      printf("this is the first time\n");
       /* The first time only the headers are valid,
          do not respond in the first round... */
       request = calloc (1, sizeof (struct Request));
@@ -152,26 +151,30 @@ static int ahc_op(void * cls,
 	  return MHD_YES;
 	}
   
- 
+
+  
+   
   if (0 != execute(request)) {
     response = MHD_create_response_from_buffer (strlen(RESPONSE_ERROR),
                                                 (void*) RESPONSE_ERROR,
-                                                MHD_RESPMEM_PERSISTENT);
-    
-    ret = MHD_queue_response(connection,
-                             MHD_HTTP_INTERNAL_SERVER_ERROR,
-                             response);
-  } else {
+                                                MHD_RESPMEM_PERSISTENT);   
+    code = MHD_HTTP_INTERNAL_SERVER_ERROR;
+      
+      } else {
     response = MHD_create_response_from_buffer (strlen(RESPONSE_OK),
                                                 (void*) RESPONSE_OK,
                                                 MHD_RESPMEM_PERSISTENT);
-  
-    ret = MHD_queue_response(connection,
-                             MHD_HTTP_OK,
-                             response);
-    
+    code = MHD_HTTP_OK;
   }
   
+  MHD_add_response_header (response,
+                             "Access-Control-Allow-Origin", 
+                           "*"); 
+  
+  ret = MHD_queue_response(connection,
+                           code,
+                           response);
+   
   MHD_destroy_response(response);
   return ret;
 }
