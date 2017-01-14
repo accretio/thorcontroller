@@ -1,0 +1,1 @@
+= Thor Manual Controller =
