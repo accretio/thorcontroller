@@ -1,6 +1,6 @@
 IDIR =../include
 CC=cc
-CFLAGS=-I$(IDIR) -DMPU9250 -DRASPBERRY_PI
+CFLAGS=-I$(IDIR) -DRASPBERRY_PI
 
 ODIR=obj
 LDIR =../lib
@@ -16,17 +16,14 @@ $(ODIR)/%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 thor: $(OBJ)
-	gcc -o $@ $^ $(CFLAGS) -lmicrohttpd # -lm -lpigpio -lrt -pthread -lcurses
+	gcc -o $@ $^ $(CFLAGS) -lmicrohttpd -lpigpio # -lrt -pthread -lcurses
 
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~ wingleveler
+	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~ thor
 
 
 send:
-	rsync -a . pi@10.0.0.138:/tmp/wingleveler
+	rsync -a . pi@pi1:/home/pi/thorcontroller
 
-
-smooth: smoother.o
-	gcc -o $@ $^ $(CFLAGS) -lm

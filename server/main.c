@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <pigpio.h>
 
 #include "gpiomapping.h"
 
@@ -29,9 +30,27 @@ int
 execute(struct Request *request) {
 
   printf("executing request with motor %d\n", request->motor);
+  
   if (request->motor < 0 || request->motor > 6) {
     return -1;
   }
+  
+  if (gpioWrite(motor_dir_gpio[request->motor - 1], request->dir)) {
+    printf("couldn't write to the direction pin");
+    return -1;
+  }
+  
+  if (gpioWrite(motor_step_gpio[request->motor - 1], 1)) {
+    printf("couldn't write to the step pin\n");
+    return -1;
+  }
+  
+  if (gpioWrite(motor_step_gpio[request->motor - 1], 0)) {
+    printf("couldn't write to the step pin\n");
+    return -1;
+  }
+  
+  gpioSleep(PI_TIME_RELATIVE, 0, DEFAULT_NEMA_PAUSE);
  
   return 0;
 }
@@ -187,17 +206,25 @@ int main(int argc,
 	   argv[0]);
     return 1;
   }
-  d = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION,
-		       atoi(argv[1]),
-		       NULL,
-		       NULL,
-		       &ahc_op,
-		       NULL,
-                       MHD_OPTION_NOTIFY_COMPLETED,
-                       &request_completed_callback,
-		       MHD_OPTION_END);
+
+  d = MHD_start_daemon(MHD_USE_SELECT_INTERNALLY | MHD_USE_DEBUG,
+                       atoi(argv[1]),
+                       NULL,
+                       NULL,
+                       &ahc_op,
+                       NULL,
+                       MHD_OPTION_CONNECTION_LIMIT, 20,
+                       MHD_OPTION_NOTIFY_COMPLETED, &request_completed_callback, NULL,
+                       MHD_OPTION_END);
+
   if (d == NULL)
     return 1;
+
+  if (gpioInitialise() < 0) {
+    printf("couldn't initialize the gpio lib\n");
+    return -1;
+  }
+  
   (void) getc (stdin);
   MHD_stop_daemon(d);
   return 0;
