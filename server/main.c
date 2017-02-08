@@ -7,19 +7,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+
+#ifndef TEST
 #include <pigpio.h>
+#endif
 
 #include "gpiomapping.h"
 
 #define RESPONSE_OK "OK"
 #define RESPONSE_ERROR "ERROR"
 
-#define DEFAULT_PAUSE 4000
+#define DEFAULT_PAUSE 4000 
 
 struct Request
 {
   struct MHD_PostProcessor *pp;
-  int motor;
+  int device;
   short dir;
   short step;
   int pause;
@@ -29,27 +32,54 @@ struct Request
 int
 execute(struct Request *request) {
 
-  printf("executing request with motor %d\n", request->motor);
+  printf("executing request on device %d\n", request->device);
   
-  if (request->motor < 0 || request->motor > 6) {
+  if (request->device < 0 || request->device > 7) {
     return -1;
   }
-  
-  if (gpioWrite(motor_dir_gpio[request->motor - 1], request->dir)) {
+
+  // set the motors position
+
+  if (gpioWrite(DIRECTION_PIN(MOTOR_1(request->device)), request->dir)) {
     printf("couldn't write to the direction pin");
     return -1;
   }
+
+  if (MOTOR_2(request->device)) {
+    if (gpioWrite(DIRECTION_PIN(MOTOR_2(request->device)), DIFFERENTIAL(request->device, request->dir))) {
+      printf("couldn't write to the direction pin");
+      return -1;
+    }
+  }
+
+  // now we step
   
-  if (gpioWrite(motor_step_gpio[request->motor - 1], 1)) {
+  if (gpioWrite(STEP_PIN(MOTOR_1(request->device)), 1)) {
+    printf("couldn't write to the step pin\n");
+    return -1;
+  }
+
+  if (MOTOR_2(request->device)) {
+    if (gpioWrite(STEP_PIN(MOTOR_2(request->device)), 1)) {
+      printf("couldn't write to the step pin\n");
+      return -1;
+    }
+  }
+
+  if (gpioWrite(STEP_PIN(MOTOR_1(request->device)), 0)) {
     printf("couldn't write to the step pin\n");
     return -1;
   }
   
-  if (gpioWrite(motor_step_gpio[request->motor - 1], 0)) {
-    printf("couldn't write to the step pin\n");
-    return -1;
+  if (MOTOR_2(request->device)) {
+    if (gpioWrite(STEP_PIN(MOTOR_2(request->device)), 0)) {
+      printf("couldn't write to the step pin\n");
+      return -1;
+    }
   }
-  
+
+  // and finally we pause
+
   gpioSleep(PI_TIME_RELATIVE, 0, DEFAULT_NEMA_PAUSE);
  
   return 0;
@@ -81,9 +111,9 @@ post_iterator (void *cls,
   struct Request *request = cls;
 
   
-  if (0 == strcmp ("motor", key))
+  if (0 == strcmp ("device", key))
     {
-      request->motor = atoi(data);
+      request->device = atoi(data);
       return MHD_YES;
     }
 
@@ -99,13 +129,13 @@ post_iterator (void *cls,
       return MHD_YES;
     }
 
-   if (0 == strcmp ("pause", key))
+  if (0 == strcmp ("pause", key))
     {
       request->pause = atoi(data);
       return MHD_YES;
     }
 
-   return MHD_NO;
+  return MHD_NO;
   
 }
 
@@ -136,7 +166,7 @@ static int ahc_op(void * cls,
       request = calloc (1, sizeof (struct Request));
       
       request->pause = DEFAULT_PAUSE;
-      request->motor = -1;
+      request->device = -1;
       request->dir = 0;
       request->step = 0;
       
@@ -165,10 +195,10 @@ static int ahc_op(void * cls,
                     *upload_data_size);
 
   if (0 != *upload_data_size)
-	{
-	  *upload_data_size = 0;
-	  return MHD_YES;
-	}
+    {
+      *upload_data_size = 0;
+      return MHD_YES;
+    }
   
 
   
@@ -179,7 +209,7 @@ static int ahc_op(void * cls,
                                                 MHD_RESPMEM_PERSISTENT);   
     code = MHD_HTTP_INTERNAL_SERVER_ERROR;
       
-      } else {
+  } else {
     response = MHD_create_response_from_buffer (strlen(RESPONSE_OK),
                                                 (void*) RESPONSE_OK,
                                                 MHD_RESPMEM_PERSISTENT);
@@ -187,7 +217,7 @@ static int ahc_op(void * cls,
   }
   
   MHD_add_response_header (response,
-                             "Access-Control-Allow-Origin", 
+                           "Access-Control-Allow-Origin", 
                            "*"); 
   
   ret = MHD_queue_response(connection,

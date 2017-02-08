@@ -2,8 +2,8 @@
 function onmousedownHandler(btn) {
   $(btn).data("clicked", "yes");
   var dir = $(btn).data("dir");
-  var motor = $(btn).parent().parent().data("motor");
-  $.post("http://pi1:1025", "motor="+motor+"&dir="+dir+"&step=1")
+  var device = $(btn).parent().parent().data("device");
+  $.post("http://pi1:1025", "device="+device+"&dir="+dir+"&step=1")
     .done(function( data ) {
       console.log(data);
       if ($(btn).data("clicked") == "yes") {
