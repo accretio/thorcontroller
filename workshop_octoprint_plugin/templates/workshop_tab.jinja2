@@ -2,8 +2,10 @@
 
         <!-- need to add the camera here -->
 
- <iframe width="100%" src="/webcam/?action=stream" style="border:none; margin: auto; display: block;"></iframe>
- 
+ <!-- <iframe width="100%" src="/webcam/?action=stream" style="border:none; margin: auto; display: block;"></iframe> -->
+
+<img id="webcam_image" data-bind="css: { flipH: settings.webcam_flipH(), flipV: settings.webcam_flipV() }" src="/webcam/?action=stream"> 
+
  <div class="row clearfix">
                 <div class="col-md-6">
 
