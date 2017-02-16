@@ -2,7 +2,7 @@
 #define GPIOMAPPING_H
 
 
-#define DEFAULT_NEMA_PAUSE 2000
+#define DEFAULT_NEMA_PAUSE 10000
 
 // here are the various devices we control
 
@@ -36,14 +36,14 @@ static const short motor_to_pins[][2] = {
   { 5, 22},
   { 13, 6},
   { 26, 19},
-  {24, 23},
+  {23, 24},
   {20, 21}
 };
 
 
 #define MOTOR_1(__device__) device_to_motors[__device__ - 1][0]
 #define MOTOR_2(__device__) device_to_motors[__device__ - 1][1]
-#define DIFFERENTIAL(__device__, __dir__) (device_to_motors[__device__ - 1][2] * (1 - __dir__) + (1 - device_to_motors[__device__][2]) * __dir__)
+#define DIFFERENTIAL(__device__, __dir__) (device_to_motors[__device__ - 1][2] * (1 - __dir__) + (1 - device_to_motors[__device__ - 1][2]) * __dir__)
 
 
 #define DIRECTION_PIN(__motor__) motor_to_pins[__motor__ - 1][0]
