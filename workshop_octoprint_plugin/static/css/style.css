@@ -1,7 +1,32 @@
-body {
-  padding-top: 50px;
-}
+
 .starter-template {
   padding: 40px 15px;
   text-align: center;
 }
+
+
+.col-md-6 {
+
+    width: 50%;
+    float: left;
+
+    text-align: center; 
+}
+
+.device {
+    margin-bottom: 40px;
+}
+
+.clearfix:after {
+     visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+     }
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* close commented backslash hack */
