@@ -18,7 +18,7 @@ class WorkshopPlugin(octoprint.plugin.TemplatePlugin,
         )
 
     
-__plugin_name__ = "Assembly station"
+__plugin_name__ = "Assembly Station"
 __plugin_version__ = "1.0.0"
 __plugin_description__ = "A plugin to control the tools"
 __plugin_implementation__ = WorkshopPlugin()
