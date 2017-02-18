@@ -139,6 +139,23 @@ post_iterator (void *cls,
   
 }
 
+static void
+add_cors_headers (struct MHD_Response *response)
+{
+  MHD_add_response_header (response,
+                           "Access-Control-Allow-Origin",
+                           "*");
+  MHD_add_response_header (response,
+                           "Access-Control-Allow-Methods",
+                           "GET, POST, OPTIONS");
+  // TODO: pull the headers from the request?
+  MHD_add_response_header (response,
+                           "Access-Control-Allow-Headers",
+                           "*");
+  MHD_add_response_header (response,
+                           "Access-Control-Max-Age",
+                           "86400");
+}
 
 static int ahc_op(void * cls,
                   struct MHD_Connection * connection,
@@ -154,8 +171,18 @@ static int ahc_op(void * cls,
   int code;
   int ret; 
   request = *ptr;
-
-
+  
+  if (0 == strcmp (MHD_HTTP_METHOD_OPTIONS, method))
+    {
+      
+      response = MHD_create_response_from_buffer (0, NULL,
+                                                  MHD_RESPMEM_PERSISTENT);
+      add_cors_headers(response);
+      ret = MHD_queue_response (connection, MHD_HTTP_OK, response);
+      MHD_destroy_response (response);
+      return ret;
+    }
+  
   if (0 != strcmp(method, MHD_HTTP_METHOD_POST))
     return MHD_NO; /* unexpected method */
   
