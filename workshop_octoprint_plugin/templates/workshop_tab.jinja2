@@ -2,12 +2,14 @@
 
         <!-- need to add the camera here -->
 
- <iframe width="100%" src="/webcam/?action=stream" style="border:none; margin: auto; display: block;"></iframe>
- 
- <div class="row">
+ <!-- <iframe width="100%" src="/webcam/?action=stream" style="border:none; margin: auto; display: block;"></iframe> -->
+
+<img id="webcam_image" data-bind="css: { flipH: settings.webcam_flipH(), flipV: settings.webcam_flipV() }" src="/webcam/?action=stream"> 
+
+ <div class="row clearfix">
                 <div class="col-md-6">
 
-                    <div data-device="1" class="device-1">
+                    <div data-device="1" class="device">
                         <h2>Art 1</h2>
                         <div class="btn-group" role="group" aria-label="...">
                             <button type="button" data-dir="0" onmousedown="onmousedownHandler(this)" onmouseup="onmouseupHandler(this)" class="btn btn-default">Left</button>
@@ -16,7 +18,7 @@
                     </div>
 
 
-                    <div data-device="3" class="device-3">
+                    <div data-device="3" class="device">
                         <h2>Art 3</h2>
                         <div class="btn-group" role="group" aria-label="...">
                             <button type="button" data-dir="0" onmousedown="onmousedownHandler(this)" onmouseup="onmouseupHandler(this)" class="btn btn-default">Left</button>
@@ -24,7 +26,7 @@
                         </div>
                     </div>
 
-                    <div data-device="5" class="device-5">
+                    <div data-device="5" class="device">
                         <h2>Art 5</h2>
                         <div class="btn-group" role="group" aria-label="...">
                             <button type="button" data-dir="0" onmousedown="onmousedownHandler(this)" onmouseup="onmouseupHandler(this)" class="btn btn-default">Left</button>
@@ -32,7 +34,7 @@
                         </div>
                     </div>
 
-                    <div data-device="7" class="device-7">
+                    <div data-device="7" class="device">
                         <h2>Gripper</h2>
                         <div class="btn-group" role="group" aria-label="...">
                             <button type="button" data-dir="0" onmousedown="onmousedownHandler(this)" onmouseup="onmouseupHandler(this)" class="btn btn-default">Close</button>
@@ -45,7 +47,7 @@
 
                 <div class="col-md-6">
                     
-                    <div data-device="2" class="device-2">
+                    <div data-device="2" class="device">
                         <h2>Art 2</h2>
                         <div class="btn-group" role="group" aria-label="...">
                             <button type="button" data-dir="0" onmousedown="onmousedownHandler(this)" onmouseup="onmouseupHandler(this)" class="btn btn-default">Left</button>
@@ -53,7 +55,7 @@
                         </div>
                     </div>
 
-                    <div data-device="4" class="device-4">
+                    <div data-device="4" class="device">
                         <h2>Art 4</h2>
                         <div class="btn-group" role="group" aria-label="...">
                             <button type="button" data-dir="0" onmousedown="onmousedownHandler(this)" onmouseup="onmouseupHandler(this)" class="btn btn-default">Left</button>
@@ -61,7 +63,7 @@
                         </div>
                     </div>
 
-                    <div data-device="6" class="device-6">
+                    <div data-device="6" class="device">
                         <h2>Art 6</h2>
                         <div class="btn-group" role="group" aria-label="...">
                             <button type="button" data-dir="0" onmousedown="onmousedownHandler(this)" onmouseup="onmouseupHandler(this)" class="btn btn-default">Left</button>
@@ -69,7 +71,7 @@
                         </div>
                     </div>
 
-                    <div data-device="8" class="device-6">
+                    <div data-device="8" class="device">
                         <h2>Vise</h2>
                         <div class="btn-group" role="group" aria-label="...">
                             <button type="button" data-dir="0" onmousedown="onmousedownHandler(this)" onmouseup="onmouseupHandler(this)" class="btn btn-default">Close</button>

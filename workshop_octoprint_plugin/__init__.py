@@ -14,7 +14,7 @@ class WorkshopPlugin(octoprint.plugin.TemplatePlugin,
     def get_assets(self):
         return dict(
             js=['js/workshop.js' ],
-            css=[ 'css/bootstrap.min.css', 'css/style.css' ]
+            css=[ 'css/style.css' ]
         )
 
     
