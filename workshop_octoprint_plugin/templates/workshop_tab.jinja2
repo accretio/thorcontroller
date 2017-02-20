@@ -4,10 +4,14 @@
 
  <!-- <iframe width="100%" src="/webcam/?action=stream" style="border:none; margin: auto; display: block;"></iframe> -->
 
-<img id="webcam_image" data-bind="css: { flipH: settings.webcam_flipH(), flipV: settings.webcam_flipV() }" src="/webcam/?action=stream"> 
-
-
+<div class="row clearfix">
+<div class="camera">
+<img id="webcam_image" data-bind="css: { flipH: settings.webcam_flipH(), flipV: settings.webcam_flipV() }" src="/webcam1/?action=stream"> 
+</div>
+<div class="camera">
 <img id="webcam_image" data-bind="css: { flipH: settings.webcam_flipH(), flipV: settings.webcam_flipV() }" src="/webcam2/?action=stream"> 
+</div>
+</div>
 
  <div class="row clearfix">
                 <div class="col-md-6">
