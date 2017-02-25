@@ -7,7 +7,6 @@ import octoprint.plugin
 from octoprint.util import RepeatedTimer
 import sys
 import re
-from datadog import initialize
 from datadog import statsd
 
 class StatsdPlugin(octoprint.plugin.StartupPlugin):
