@@ -38,7 +38,7 @@ class StatsdPlugin(octoprint.plugin.StartupPlugin):
                 self._logger.debug("Pi 2")
                 self.isRaspi = True
 
-            if self.isRaspi and self.displayRaspiTemp:
+            if self.isRaspi: 
                 self._logger.info("Let's start RepeatedTimer!")
                 self.startTimer()
                 
