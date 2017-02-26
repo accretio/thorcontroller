@@ -63,16 +63,17 @@ class StatsdPlugin(octoprint.plugin.StartupPlugin):
             def randrange_float(start, stop, step):
                 return random.randint(0, int((stop - start) / step)) * step + start
             p = "temp=%s'C" % randrange_float(5, 60, 0.1)
-            self._logger.debug("response from sarge: %s" % p)
+            
+        self._logger.debug("response from sarge: %s" % p)
 
-            match = re.search('=(.*)\'', p)
-   
-            if not match:
-                self.isRaspi = False
-            else:
-                temp = match.group(1)
-                self._logger.info("match: %s" % temp)
-                statsd.gauge('temperature.cpu', float(temp))
+        match = re.search('=(.*)\'', p)
+
+        if not match:
+            self.isRaspi = False
+        else:
+            temp = match.group(1)
+            self._logger.info("match: %s" % temp)
+            statsd.gauge('temperature.cpu', float(temp))
                 
 
 __plugin_name__ = "Statsd plugin"
