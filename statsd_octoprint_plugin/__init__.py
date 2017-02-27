@@ -33,8 +33,8 @@ class StatsdPlugin(octoprint.plugin.StartupPlugin):
                 self._logger.info("temps are %s" % temps)
                 statsd.gauge('printer.temperatures.bed.actual', temps['bed']['actual'])
                 statsd.gauge('printer.temperatures.bed.target', temps['bed']['target'])
-                statsd.gauge('printer.temperatures.extruder.actual', temps['extruder']['actual'])
-                statsd.gauge('printer.temperatures.extruder.target', temps['extruder']['target'])
+                statsd.gauge('printer.temperatures.extruder.actual', temps['tool0']['actual'])
+                statsd.gauge('printer.temperatures.extruder.target', temps['tool0']['target'])
         except:
             self._logger.error("Unexpected error: %s" % (sys.exc_info()[0]))
 
