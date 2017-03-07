@@ -59,3 +59,10 @@ static const short motor_to_pins[][2] = {
 
 
 #define GPIO_ENABLE_PIN XX
+#define PWM_PIN 18
+
+
+#define MAX_PWM 1500
+#define MIN_PWM 1010
+
+#define PWM_STEP 20

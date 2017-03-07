@@ -25,7 +25,7 @@ clean:
 
 
 send:
-	rsync -a . pi@pi1:/home/pi/thorcontroller
+	rsync -a . pi@pi1:/home/pi/thorcontroller/server
 
 
 send2:

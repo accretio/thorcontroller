@@ -14,6 +14,19 @@ function onmousedownHandler(btn) {
   
 }
 
+function onmousedownHandlerGripper(btn) {
+  $(btn).data("clicked", "yes");
+  var dir = $(btn).data("dir");
+  $.post("/controller/pwm", "dir="+dir)
+    .done(function( data ) {
+      console.log(data);
+      if ($(btn).data("clicked") == "yes") {
+        onmousedownHandlerGripper(btn);
+      }
+    })
+  
+}
+
 function onmouseupHandler(btn) {
   $(btn).data("clicked", "no");
 }

@@ -13,22 +13,42 @@
 #endif
 
 #include "gpiomapping.h"
+#include "request.h"
+#include "state.h"
 
 #define RESPONSE_OK "OK"
 #define RESPONSE_ERROR "ERROR"
 
-#define DEFAULT_PAUSE 4000 
+#define DEFAULT_PAUSE 4000
 
-struct Request
-{
-  struct MHD_PostProcessor *pp;
-  int device;
-  short dir;
-  short step;
-  int pause;
-  int active;
-};
+#define MAX(a,b)               \
+  ({ __typeof__ (a) _a = (a);   \
+    __typeof__ (b) _b = (b);    \
+    _a > _b ? _a : _b; })
 
+#define MIN(a,b)               \
+  ({ __typeof__ (a) _a = (a);   \
+    __typeof__ (b) _b = (b);    \
+    _a < _b ? _a : _b; })
+
+int
+execute_pwm(struct Request *request) {
+  printf("executing pwm move\n");
+  pthread_mutex_lock(&state_mtx);
+  
+  if (request->dir == 1) {
+    global_state.pwm = MAX(MIN_PWM, MIN(MAX_PWM, global_state.pwm + PWM_STEP));
+  } else {
+    global_state.pwm = MAX(MIN_PWM, MIN(MAX_PWM, global_state.pwm - PWM_STEP));
+  };
+
+  printf("executing pwm move: going to %d\n", global_state.pwm);
+    
+  gpioServo(PWM_PIN, global_state.pwm); 
+  
+  pthread_mutex_unlock(&state_mtx);
+  return 0;    
+}
 
 int
 execute_operate(struct Request *request) {
@@ -255,7 +275,7 @@ static int ahc_op(void * cls,
         }
       *ptr = request;
 
-      if (0 == strcmp(url, "/operate")) {
+      if (0 == strcmp(url, "/operate") || (0 == strcmp(url, "/pwm"))) {
         request->pp = MHD_create_post_processor (connection, 1024,
                                                  &post_iterator, request);
       } else if (0 == strcmp(url, "/admin")) {
@@ -287,6 +307,8 @@ static int ahc_op(void * cls,
   
   if (0 == strcmp(url, "/operate")) {
     ret = execute_operate(request);
+  } else if (0 == strcmp(url, "/pwm")) {
+    ret = execute_pwm(request);
   } else if (0 == strcmp(url, "/admin")) {
     ret = execute_admin(request);
   }
