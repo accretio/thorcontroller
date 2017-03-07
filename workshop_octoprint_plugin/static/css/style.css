@@ -36,3 +36,7 @@
 * html .clearfix { height: 1%; }
 .clearfix { display: block; }
 /* close commented backslash hack */
+
+.admin-buttons {
+    margin-top: 20px;
+}
