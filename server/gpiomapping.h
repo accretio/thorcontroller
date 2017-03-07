@@ -56,3 +56,6 @@ static const short motor_to_pins[][2] = {
 
 
 #endif
+
+
+#define GPIO_ENABLE_PIN XX

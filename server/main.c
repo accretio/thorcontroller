@@ -26,11 +26,12 @@ struct Request
   short dir;
   short step;
   int pause;
+  int active;
 };
 
 
 int
-execute(struct Request *request) {
+execute_operate(struct Request *request) {
 
   printf("executing request on device %d\n", request->device);
   
@@ -85,6 +86,34 @@ execute(struct Request *request) {
   return 0;
 }
 
+
+int
+execute_admin(struct Request *request) {
+
+  printf("execute admin request\n");
+
+  switch(request->active) {
+  case 0:
+    printf("deactivating the steppers\n");
+    /* if (gpioWrite(GPIO_ACTIVATE_PIN, 1)) {
+       printf("couldn't write to the activate pin\n");
+       return -1;
+       } */
+      break; 
+  case 1:
+    printf("activating the steppers\n");
+      /*  if (gpioWrite(GPIO_ACTIVATE_PIN, 0)) {
+          printf("couldn't write to the activate pin\n");
+          return -1;
+          } */
+    break; 
+  default:
+    return -1; 
+  }
+
+  return 0;
+}
+
 static void
 request_completed_callback (void *cls,
 			    struct MHD_Connection *connection,
@@ -132,6 +161,28 @@ post_iterator (void *cls,
   if (0 == strcmp ("pause", key))
     {
       request->pause = atoi(data);
+      return MHD_YES;
+    }
+
+  return MHD_NO;
+  
+}
+
+static int
+post_iterator_admin (void *cls,
+                     enum MHD_ValueKind kind,
+                     const char *key,
+                     const char *filename,
+                     const char *content_type,
+                     const char *transfer_encoding,
+                     const char *data, uint64_t off, size_t size)
+{
+  struct Request *request = cls;
+
+  
+  if (0 == strcmp ("active", key))
+    {
+      request->active = atoi(data);
       return MHD_YES;
     }
 
@@ -203,12 +254,18 @@ static int ahc_op(void * cls,
           return MHD_NO;
         }
       *ptr = request;
-      request->pp = MHD_create_post_processor (connection, 1024,
-                                               &post_iterator, request);
+
+      if (0 == strcmp(url, "/operate")) {
+        request->pp = MHD_create_post_processor (connection, 1024,
+                                                 &post_iterator, request);
+      } else if (0 == strcmp(url, "/admin")) {
+        request->pp = MHD_create_post_processor (connection, 1024, &post_iterator_admin, request); 
+      }
       
       if (NULL == request->pp)
         {
           /* Couldn't allocate the post processor */
+          printf("couldn't allocate the post processor for url %s\n", url);
           return MHD_NO;
         }
       
@@ -227,10 +284,14 @@ static int ahc_op(void * cls,
       return MHD_YES;
     }
   
-
   
-   
-  if (0 != execute(request)) {
+  if (0 == strcmp(url, "/operate")) {
+    ret = execute_operate(request);
+  } else if (0 == strcmp(url, "/admin")) {
+    ret = execute_admin(request);
+  }
+ 
+  if (0 != ret) {
     response = MHD_create_response_from_buffer (strlen(RESPONSE_ERROR),
                                                 (void*) RESPONSE_ERROR,
                                                 MHD_RESPMEM_PERSISTENT);   

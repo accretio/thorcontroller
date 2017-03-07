@@ -27,3 +27,6 @@ clean:
 send:
 	rsync -a . pi@pi1:/home/pi/thorcontroller
 
+
+send2:
+	rsync -a . pi@workshop.accret.io:/home/pi/thorcontroller/server
