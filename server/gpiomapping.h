@@ -25,8 +25,7 @@ static const short device_to_motors[][3] = {
   { 5, 0, 0 },
   { 6, 7, 0 },
   { 6, 7, 1 },
-  { 8, 0, 0 },
-  { 9, 0, 0 }
+  { 8, 0, 0 }
 };
 
 
@@ -40,8 +39,7 @@ static const short motor_to_pins[][2] = {
   { 26, 19},
   { 23, 24},
   { 20, 21},
-  { 15, 14 },
-  { 18, 25 }
+  { 15, 14 }
 };
 
 
@@ -58,7 +56,7 @@ static const short motor_to_pins[][2] = {
 #endif
 
 
-#define GPIO_ENABLE_PIN XX
+#define GPIO_ENABLE_PIN 10
 #define PWM_PIN 18
 
 

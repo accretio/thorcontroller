@@ -115,17 +115,17 @@ execute_admin(struct Request *request) {
   switch(request->active) {
   case 0:
     printf("deactivating the steppers\n");
-    /* if (gpioWrite(GPIO_ACTIVATE_PIN, 1)) {
+    if (gpioWrite(GPIO_ENABLE_PIN, 1)) {
        printf("couldn't write to the activate pin\n");
        return -1;
-       } */
+    } 
       break; 
   case 1:
     printf("activating the steppers\n");
-      /*  if (gpioWrite(GPIO_ACTIVATE_PIN, 0)) {
+    if (gpioWrite(GPIO_ENABLE_PIN, 0)) {
           printf("couldn't write to the activate pin\n");
           return -1;
-          } */
+    } 
     break; 
   default:
     return -1; 
