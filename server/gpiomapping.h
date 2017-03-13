@@ -18,14 +18,14 @@
 
 // here is the mapping device -> motors (motor 1, motor 2, 0 = same, 1 = opposed)
 
-static const short device_to_motors[][3] = {
-  { 1, 0, 0 },
-  { 2, 3, 0 },
-  { 4, 0, 0 },
-  { 5, 0, 0 },
-  { 6, 7, 0 },
-  { 6, 7, 1 },
-  { 8, 0, 0 }
+static const int device_to_motors[][4] = {
+  { 1, 0, 0, DEFAULT_NEMA_PAUSE },
+  { 2, 3, 0, DEFAULT_NEMA_PAUSE },
+  { 4, 0, 0, DEFAULT_NEMA_PAUSE },
+  { 5, 0, 0, DEFAULT_NEMA_PAUSE },
+  { 6, 7, 0, DEFAULT_NEMA_PAUSE },
+  { 6, 7, 1, DEFAULT_NEMA_PAUSE },
+  { 8, 0, 0, DEFAULT_NEMA_PAUSE }
 };
 
 
@@ -34,11 +34,11 @@ static const short device_to_motors[][3] = {
 static const short motor_to_pins[][2] = {
   { 12, 16 },
   { 27, 17 },
-  { 5, 22},
-  { 13, 6},
-  { 26, 19},
-  { 23, 24},
-  { 20, 21},
+  { 5, 22 },
+  { 13, 6 },
+  { 26, 19 },
+  { 23, 24 },
+  { 20, 21 },
   { 15, 14 }
 };
 
@@ -51,7 +51,7 @@ static const short motor_to_pins[][2] = {
 #define DIRECTION_PIN(__motor__) motor_to_pins[__motor__ - 1][0]
 #define STEP_PIN(__motor__) motor_to_pins[__motor__ - 1][1]
 
-
+#define PAUSE(__device__) device_to_motors[__device__ - 1][3]
 
 #endif
 

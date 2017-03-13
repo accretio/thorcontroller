@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import octoprint.plugin
 
 class WorkshopPlugin(octoprint.plugin.TemplatePlugin,
+                     octoprint.plugin.SettingsPlugin,
                      octoprint.plugin.AssetPlugin):
 
     def get_template_configs(self):
@@ -15,6 +16,11 @@ class WorkshopPlugin(octoprint.plugin.TemplatePlugin,
         return dict(
             js=['js/workshop.js' ],
             css=[ 'css/style.css' ]
+        )
+
+    def get_settings_restricted_path(self):
+        return dict(
+                user=[["js", "workshop.js"]]
         )
 
     

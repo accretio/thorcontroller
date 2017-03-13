@@ -101,7 +101,7 @@ execute_operate(struct Request *request) {
 
   // and finally we pause
 
-  gpioSleep(PI_TIME_RELATIVE, 0, DEFAULT_NEMA_PAUSE);
+  gpioSleep(PI_TIME_RELATIVE, 0, PAUSE(request->device));
  
   return 0;
 }
